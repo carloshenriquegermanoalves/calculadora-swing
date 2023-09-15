@@ -1,9 +1,13 @@
 package br.com.carlos.calc.visao;
 
+import br.com.carlos.calc.modelo.Memoria;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Teclado extends JPanel {
+public class Teclado extends JPanel implements ActionListener {
 
     private final Color CINZA_ESCURO = new Color(68,69,68);
     private final Color CINZA_CLARO = new Color(99,99,99);
@@ -18,9 +22,10 @@ public class Teclado extends JPanel {
         constraints.fill = GridBagConstraints.BOTH; //Preenche o botão em ambos os lados
 
         //Primeira linha do teclado
+        constraints.gridwidth = 2;
         adicionarBotao("AC", CINZA_ESCURO, constraints, 0, 0);
-        adicionarBotao("+/-", CINZA_ESCURO, constraints, 1, 0);
-        adicionarBotao("%", CINZA_ESCURO, constraints, 2, 0);
+        constraints.gridwidth = 1;
+        adicionarBotao("±", CINZA_ESCURO, constraints, 2, 0);
         adicionarBotao("/", LARANJA, constraints, 3, 0);
 
         //Segunda linha do teclado
@@ -55,7 +60,15 @@ public class Teclado extends JPanel {
         constraint.gridx = x;
         constraint.gridy = y;
         Botao botao = new Botao(texto, cor);
+        botao.addActionListener(this);
         add(botao, constraint);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof JButton) {
+            JButton botao = (JButton) e.getSource();
+            Memoria.getMemoriaInstanciada().processarNovoValor(botao.getText());
+        }
+    }
 }
